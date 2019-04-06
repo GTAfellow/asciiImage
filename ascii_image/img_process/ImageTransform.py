@@ -12,7 +12,7 @@ class ImageTransform(object):
     """
     图像处理类
     """
-    ascii_char = list("@M%WXmBU&ZQ$dpOLwh8kYCn#bqaxJoIuf0}(])[{tz|/jvc\?l+*ri<1>!^~_\";-,`:'. ")
+    ascii_char = list("@M%WXmBU&ZQ$dpOLwh8kYCn#bqaxJoIuf0}(])[{tz|/jvc\\?l+*ri<1>!^~_\";-,`:'. ")
 
     def __init__(self, img_path: str, char_list=None):
         logging.basicConfig(level=logging.INFO,
@@ -49,8 +49,8 @@ class ImageTransform(object):
         if alpha == 0:
             return ' '
         length = len(self.ascii_char)
-        gray = int(0.2126 * r + 0.7152 * g + 0.0722 * b)
-        unit = (256.0 + 1) / length
+        gray = round(0.2126 * r + 0.7152 * g + 0.0722 * b)
+        unit = 255 / (length - 1)
         return self.ascii_char[int(gray / unit)]
 
     def img_to_ascii(self, width: int, height: int, delimiter='\n'):
@@ -277,8 +277,8 @@ class ImageTransform(object):
         Image转换为numpy数组
         :return: numpy数组
         """
-        # im = self.__resize(width, height)
-        array = np.array(self.im)
+        image = self.enhance_contrast(self.im, constants.ImgConstants.CONTRAST_VALUE)
+        array = np.array(image)
         return array
 
     @staticmethod
